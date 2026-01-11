@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orange13 — Play, Host, Learn</title>
+  <meta name="description" content="Orange13 is a fast, fun, classroom-friendly quiz game. Host live games, join with a code, and climb the leaderboard." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg: #0f1220;
+      --panel: #171a2b;
+      --accent: #ff7a00;
+      --accent-2: #ffb347;
+      --text: #e8ecf1;
+      --muted: #a9b1c3;
+      --success: #2ecc71;
+      --danger: #ff4d4f;
+      --warning: #f1c40f;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: radial-gradient(1200px 600px at 20% 10%, #1a1f36 0%, #0f1220 60%, #0b0e19 100%);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 20px 80px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: conic-gradient(from 210deg, #ff7a00, #ffb347, #ff7a00);
+      box-shadow: 0 6px 18px rgba(255, 122, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .logo::after {
+      content: "13";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #0f1220;
+      text-shadow: none;
+    }
+
+    .title {
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      font-size: 1.35rem;
+    }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      color: #0f1220;
+      background: var(--accent);
+      box-shadow: var(--shadow);
+      transition: transform 0.08s ease, filter 0.2s ease, background 0.2s ease;
+    }
+    .btn:hover { filter: brightness(1.05); }
+    .btn:active { transform: translateY(1px) scale(0.99); }
+
+    .btn.secondary {
+      background: #2b2f45;
+      color: var(--text);
+      box-shadow: none;
+      border: 1px solid #3a3f5f;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, #171a2b 0%, #14182a 100%);
+      border: 1px solid #262b45;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .hero {
+      padding: 24px;
+      border-radius: var(--radius);
+      background:
+        radial-gradient(600px 300px at 80% -20%, rgba(255, 122, 0, 0.25) 0%, transparent 60%),
+        linear-gradient(180deg, #171a2b 0%, #14182a 100%);
+      border: 1px solid #262b45;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+      letter-spacing: 0.2px;
+    }
+
+    .hero p {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .statbar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      background: #1b1f33;
+      border: 1px solid #262b45;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat .big { font-size: 1.25rem; font-weight: 800; }
+    .stat .label { color: var(--muted); font-size: 0.9rem; }
+
+    .section-title {
+      font-weight: 800;
+      margin: 0 0 12px;
+      font-size: 1.1rem;
+      letter-spacing: 0.2px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #2a2f4a;
+      background: #121528;
+      color: var(--text);
+      font-weight: 600;
+      outline: none;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+    input::placeholder { color: #7e88a8; }
+    input:focus {
+      border-color: #3a4064;
+      box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.15);
+    }
+
+    .code-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: #1b1f33;
+      border: 1px solid #262b45;
+      font-weight: 700;
+      color: var(--accent-2);
+      user-select: none;
+    }
+
+    .divider {
+      height: 1px;
+      background: #262b45;
+      margin: 16px 0;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #1b1f33;
+      border: 1px solid #262b45;
+    }
+
+    .badge {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: #262b45;
+      color: var(--muted);
+      border: 1px solid #2f3556;
+    }
+
+    .footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    /* Game modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: rgba(10, 12, 22, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+    }
+    .modal.open { display: grid; }
+
+    .modal-card {
+      width: min(720px, 92vw);
+      background: #14182a;
+      border: 1px solid #262b45;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      background: #171a2b;
+      border-bottom: 1px solid #262b45;
+    }
+
+    .modal-body {
+      padding: 16px;
+    }
+
+    .close {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid #2a2f4a;
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .close:hover { color: var(--text); }
+
+    .question {
+      background: #1b1f33;
+      border: 1px solid #262b45;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .answer {
+      background: #121528;
+      border: 1px solid #2a2f4a;
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+      transition: transform 0.08s ease, border 0.2s ease, background 0.2s ease;
+    }
+    .answer:hover { transform: translateY(-1px); border-color: #3a4064; }
+    .answer.correct { border-color: var(--success); background: #143022; }
+    .answer.wrong { border-color: var(--danger); background: #2a1416; }
+
+    .leaderboard {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .lb-row {
+      display: grid;
+      grid-template-columns: 40px 1fr 80px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 10px;
+      background: #1b1f33;
+      border: 1px solid #262b45;
+    }
+    .lb-row.me { border-color: var(--accent); }
+
+    .pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #262b45;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.85rem;
+      border: 1px solid #2f3556;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .statbar { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .answers { grid-template-columns: 1fr; }
+      .statbar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">Orange13</div>
+      </div>
+      <nav class="nav">
+        <button class="btn secondary" id="howItWorksBtn">How it works</button>
+        <button class="btn secondary" id="themesBtn">Themes</button>
+        <button class="btn" id="createSetBtn">Create set</button>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h1>Fast, fun, classroom-friendly.</h1>
+      <p>Host live games, join with a code, and climb the leaderboard—Orange13 turns review time into play time.</p>
+      <div class="hero-actions">
+        <button class="btn" id="hostGameBtn">Host a game</button>
+        <button class="btn secondary" id="joinGameBtn">Join with code</button>
+        <span class="code-pill" id="liveCodePill" title="Game code">
+          <span>Code:</span>
+          <strong id="liveCode">—</strong>
+        </span>
+      </div>
+      <div class="statbar">
+        <div class="stat">
+          <div class="big" id="statPlayers">0</div>
+          <div class="label">Players online</div>
+        </div>
+        <div class="stat">
+          <div class="big" id="statGames">0</div>
+          <div class="label">Live games</div>
+        </div>
+        <div class="stat">
+          <div class="big" id="statQuestions">24</div>
+          <div class="label">Sample questions</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <div class="panel">
+        <h3 class="section-title">Join a game</h3>
+        <div class="form-row">
+          <input type="text" id="joinCodeInput" placeholder="Enter game code (e.g., 482-913)" />
+          <button class="btn" id="joinBtn">Join</button>
+        </div>
+        <div class="form-row">
+          <input type="text" id="nicknameInput" placeholder="Choose a nickname" />
+          <button class="btn secondary" id="randomNickBtn">Randomize</button>
+        </div>
+        <div class="divider"></div>
+        <div class="list" id="publicGamesList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3 class="section-title">Host a game</h3>
+        <div class="form-row">
+          <input type="text" id="setTitleInput" placeholder="Set title (e.g., Algebra Basics)" />
+          <button class="btn secondary" id="loadSampleBtn">Load sample</button>
+        </div>
+        <div class="form-row">
+          <input type="number" id="questionTimeInput" placeholder="Time per question (seconds)" min="5" max="120" value="20" />
+          <button class="btn" id="createGameBtn">Create game</button>
+        </div>
+        <p style="color: var(--muted); margin: 8px 0 0;">
+          After creating, share the code. Players join on this page—start when everyone’s in.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div>© <span id="year"></span> Orange13 — Built for classrooms and teams.</div>
+      <div>
+        <span class="pill">Beta</span>
+        <span class="pill">No accounts</span>
+        <span class="pill">Privacy-first</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game modal -->
+  <div class="modal" id="gameModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="gameTitle">
+      <div class="modal-header">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div class="title" id="gameTitle">Orange13 Live Game</div>
+        </div>
+        <button class="close" id="closeGameBtn">Exit</button>
+      </div>
+      <div class="modal-body">
+        <div id="preGameView">
+          <div class="list-item">
+            <div>
+              <div class="badge">Game code</div>
+              <div style="font-weight: 800; font-size: 1.2rem;" id="modalGameCode">—</div>
+            </div>
+            <button class="btn" id="startGameBtn">Start game</button>
+          </div>
+          <div class="divider"></div>
+          <h4 style="margin: 0 0 10px;">Lobby</h4>
+          <div class="list" id="lobbyList"></div>
+        </div>
+
+        <div id="liveGameView" style="display:none;">
+          <div class="question">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <div class="badge">Question</div>
+                <div style="font-weight:800; font-size:1.1rem;" id="qText">—</div>
+              </div>
+              <div class="pill" id="timerPill">20s</div>
+            </div>
+          </div>
+          <div class="answers" id="answersGrid"></div>
+          <div class="divider"></div>
+          <h4 style="margin: 0 0 10px;">Leaderboard</h4>
+          <div class="leaderboard" id="leaderboard"></div>
+        </div>
+
+        <div id="postGameView" style="display:none;">
+          <h3 style="margin: 0 0 8px;">Game over</h3>
+          <p style="color: var(--muted); margin: 0 0 12px;">Nice run. Here are the final standings.</p>
+          <div class="leaderboard" id="finalBoard"></div>
+          <div style="display:flex; gap:10px; margin-top:12px;">
+            <button class="btn" id="playAgainBtn">Play again</button>
+            <button class="btn secondary" id="closeSummaryBtn">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Basic state (client-side demo; replace with real backend later) ---
+    const state = {
+      playersOnline: 0,
+      liveGames: [],
+      myNickname: "",
+      myGameCode: null,
+      currentSet: [],
+      hostMode: false,
+      lobby: [],
+      scores: {},
+      currentQIndex: 0,
+      timePerQuestion: 20,
+      timer: null,
+      meId: null,
+    };
+
+    const sampleSet = [
+      {
+        q: "Which property is true for all parallelograms?",
+        a: ["Opposite sides are parallel", "All angles are right angles", "All sides are equal", "Diagonals are perpendicular"],
+        correct: 0
+      },
+      {
+        q: "Solve: \\(2x + 6 = 18\\). What is \\(x\\)?",
+        a: ["6", "5", "4", "3"],
+        correct: 0
+      },
+      {
+        q: "The capital of South Carolina is…",
+        a: ["Greenville", "Columbia", "Charleston", "Spartanburg"],
+        correct: 1
+      },
+      {
+        q: "Which is a prime number?",
+        a: ["21", "27", "29", "33"],
+        correct: 2
+      },
+      {
+        q: "In computing, HTTP stands for…",
+        a: ["HyperText Transfer Protocol", "High Transfer Text Protocol", "Hyperlink Transport Protocol", "Host Transfer Type Protocol"],
+        correct: 0
+      }
+    ];
+
+    // --- Utilities ---
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+    const randomCode = () =>
+      `${Math.floor(100 + Math.random()*900)}-${Math.floor(100 + Math.random()*900)}`;
+
+    const randomNick = () => {
+      const adj = ["Swift", "Bright", "Clever", "Brave", "Lucky", "Zesty", "Chill", "Nimble", "Sunny", "Witty"];
+      const animal = ["Fox", "Panda", "Otter", "Hawk", "Koala", "Tiger", "Dolphin", "Lynx", "Robin", "Wolf"];
+      return `${adj[Math.floor(Math.random()*adj.length)]}${animal[Math.floor(Math.random()*animal.length)]}${Math.floor(Math.random()*90)+10}`;
+    };
+
+    const renderStats = () => {
+      $("#statPlayers").textContent = state.playersOnline;
+      $("#statGames").textContent = state.liveGames.length;
+      $("#statQuestions").textContent = state.currentSet.length || sampleSet.length;
+    };
+
+    const renderPublicGames = () => {
+      const list = $("#publicGamesList");
+      list.innerHTML = "";
+      if (state.liveGames.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "list-item";
+        empty.innerHTML = `
+          <div style="color: var(--muted);">No public games yet. Host one to get started.</div>
+          <button class="btn" id="hostInlineBtn">Host</button>
+        `;
+        list.appendChild(empty);
+        $("#hostInlineBtn").onclick = () => $("#hostGameBtn").click();
+        return;
+      }
+      state.liveGames.forEach(g => {
+        const row = document.createElement("div");
+        row.className = "list-item";
+        row.innerHTML = `
+          <div>
+            <div style="font-weight:800;">${g.title}</div>
+            <div style="color: var(--muted);">Code: ${g.code} • Players: ${g.players.length}</div>
+          </div>
+          <button class="btn secondary">Join</button>
+        `;
+        row.querySelector("button").onclick = () => {
+          $("#joinCodeInput").value = g.code;
+          $("#joinBtn").click();
+        };
+        list.appendChild(row);
+      });
+    };
+
+    const setYear = () => { $("#year").textContent = new Date().getFullYear(); };
+
+    // --- Modal controls ---
+    const openModal = () => {
+      $("#gameModal").classList.add("open");
+      $("#gameModal").setAttribute("aria-hidden", "false");
+    };
+    const closeModal = () => {
+      $("#gameModal").classList.remove("open");
+      $("#gameModal").setAttribute("aria-hidden", "true");
+      stopTimer();
+      showView("pre");
+    };
+
+    const showView = (which) => {
+      const pre = $("#preGameView");
+      const live = $("#liveGameView");
+      const post = $("#postGameView");
+      pre.style.display = which === "pre" ? "block" : "none";
+      live.style.display = which === "live" ? "block" : "none";
+      post.style.display = which === "post" ? "block" : "none";
+    };
+
+    // --- Lobby & game flow ---
+    const createGame = () => {
+      const title = $("#setTitleInput").value.trim() || "Orange13 Sample Set";
+      const code = randomCode();
+      state.hostMode = true;
+      state.myGameCode = code;
+      state.currentSet = state.currentSet.length ? state.currentSet : sampleSet.slice();
+      state.lobby = [];
+      state.scores = {};
+      state.currentQIndex = 0;
+      state.timePerQuestion = Math.max(5, Math.min(120, Number($("#questionTimeInput").value) || 20));
+
+      const game = { code, title, players: [], public: true };
+      state.liveGames.push(game);
+
+      $("#liveCode").textContent = code;
+      $("#modalGameCode").textContent = code;
+      $("#gameTitle").textContent = `Orange13 — ${title}`;
+      renderPublicGames();
+      renderStats();
+      renderLobby();
+      openModal();
+      showView("pre");
+    };
+
+    const renderLobby = () => {
+      const list = $("#lobbyList");
+      list.innerHTML = "";
+      if (state.lobby.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "list-item";
+        empty.innerHTML = `<div style="color: var(--muted);">Waiting for players… share the code above.</div>`;
+        list.appendChild(empty);
+        return;
+      }
+      state.lobby.forEach((p, i) => {
+        const row = document.createElement("div");
+        row.className = "list-item";
+        row.innerHTML = `
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="badge">#${i+1}</span>
+            <strong>${p.name}</strong>
+          </div>
+          <span class="pill">Ready</span>
+        `;
+        list.appendChild(row);
+      });
+    };
+
+    const joinGame = () => {
+      const code = $("#joinCodeInput").value.trim();
+      const nick = ($("#nicknameInput").value.trim() || randomNick()).slice(0, 18);
+      if (!code || !/^\d{3}-\d{3}$/.test(code)) {
+        alert("Enter a valid game code (e.g., 482-913).");
+        return;
+      }
+      const game = state.liveGames.find(g => g.code === code);
+      if (!game) {
+        alert("No game found with that code.");
+        return;
+      }
+      state.myNickname = nick;
+      state.meId = `p_${Math.random().toString(36).slice(2, 8)}`;
+      state.playersOnline += 1;
+
+      game.players.push({ id: state.meId, name: nick });
+      state.lobby.push({ id: state.meId, name: nick });
+      state.scores[state.meId] = 0;
+
+      $("#nicknameInput").value = nick;
+      $("#liveCode").textContent = code;
+      $("#modalGameCode").textContent = code;
+      renderStats();
+      renderLobby();
+      openModal();
+      showView("pre");
+    };
+
+    const startGame = () => {
+      if (state.currentSet.length === 0) return;
+      state.currentQIndex = 0;
+      showView("live");
+      renderQuestion();
+      startTimer();
+    };
+
+    const renderQuestion = () => {
+      const q = state.currentSet[state.currentQIndex];
+      $("#qText").textContent = q.q;
+      const grid = $("#answersGrid");
+      grid.innerHTML = "";
+      q.a.forEach((text, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "answer";
+        btn.textContent = text;
+        btn.onclick = () => handleAnswer(idx);
+        grid.appendChild(btn);
+      });
+      renderLeaderboard();
+    };
+
+    const handleAnswer = (idx) => {
+      const q = state.currentSet[state.currentQIndex];
+      const buttons = $$("#answersGrid .answer");
+      buttons.forEach((b, i) => {
+        b.disabled = true;
+        if (i === q.correct) b.classList.add("correct");
+        else if (i === idx) b.classList.add("wrong");
+      });
+      // Award points (simple demo: +100 for correct)
+      if (idx === q.correct && state.meId) {
+        state.scores[state.meId] = (state.scores[state.meId] || 0) + 100;
+      }
+      renderLeaderboard();
+      // Proceed to next after short delay
+      setTimeout(nextQuestion, 900);
+    };
+
+    const nextQuestion = () => {
+      stopTimer();
+      state.currentQIndex += 1;
+      if (state.currentQIndex >= state.currentSet.length) {
+        showView("post");
+        renderFinalBoard();
+        return;
+      }
+      renderQuestion();
+      startTimer();
+    };
+
+    const startTimer = () => {
+      let t = state.timePerQuestion;
+      $("#timerPill").textContent = `${t}s`;
+      stopTimer();
+      state.timer = setInterval(() => {
+        t -= 1;
+        $("#timerPill").textContent = `${t}s`;
+        if (t <= 0) {
+          nextQuestion();
+        }
+      }, 1000);
+    };
+
+    const stopTimer = () => {
+      if (state.timer) {
+        clearInterval(state.timer);
+        state.timer = null;
+      }
+    };
+
+    const renderLeaderboard = () => {
+      const lb = $("#leaderboard");
+      lb.innerHTML = "";
+      const rows = Object.entries(state.scores)
+        .map(([id, score]) => {
+          const name = (state.lobby.find(p => p.id === id) || {}).name || "Player";
+          return { id, name, score };
+        })
+        .sort((a, b) => b.score - a.score);
+
+      rows.forEach((r, i) => {
+        const row = document.createElement("div");
+        row.className = "lb-row" + (r.id === state.meId ? " me" : "");
+        row.innerHTML = `
+          <div class="badge">${i+1}</div>
+          <div style="font-weight:700;">${r.name}</div>
+          <div style="text-align:right; font-weight:800;">${r.score}</div>
+        `;
+        lb.appendChild(row);
+      });
+    };
+
+    const renderFinalBoard = () => {
+      const fb = $("#finalBoard");
+      fb.innerHTML = "";
+      const rows = Object.entries(state.scores)
+        .map(([id, score]) => {
+          const name = (state.lobby.find(p => p.id === id) || {}).name || "Player";
+          return { id, name, score };
+        })
+        .sort((a, b) => b.score - a.score);
+
+      rows.forEach((r, i) => {
+        const row = document.createElement("div");
+        row.className = "lb-row" + (r.id === state.meId ? " me" : "");
+        row.innerHTML = `
+          <div class="badge">${i+1}</div>
+          <div style="font-weight:700;">${r.name}</div>
+          <div style="text-align:right; font-weight:800;">${r.score}</div>
+        `;
+        fb.appendChild(row);
+      });
+    };
+
+    // --- Event bindings ---
+    $("#hostGameBtn").onclick = createGame;
+    $("#createGameBtn").onclick = createGame;
+    $("#joinGameBtn").onclick = () => $("#joinCodeInput").focus();
+    $("#joinBtn").onclick = joinGame;
+    $("#randomNickBtn").onclick = () => {
+      const nick = randomNick();
+      $("#nicknameInput").value = nick;
+      state.myNickname = nick;
+    };
+    $("#loadSampleBtn").onclick = () => {
+      state.currentSet = sampleSet.slice();
+      renderStats();
+      alert("Sample set loaded.");
+    };
+    $("#startGameBtn").onclick = startGame;
+    $("#closeGameBtn").onclick = closeModal;
+    $("#closeSummaryBtn").onclick = closeModal;
+    $("#playAgainBtn").onclick = () => {
+      showView("pre");
+      renderLobby();
+    };
+
+    $("#howItWorksBtn").onclick = () => {
+      alert("Host a game to get a code. Players join with the code. Answer questions, earn points, and top the leaderboard.");
+    };
+    $("#themesBtn").onclick = () => {
+      alert("Themes coming soon—classroom, arcade, and chill modes.");
+    };
+    $("#createSetBtn").onclick = () => {
+      alert("Set builder is in progress. For now, use the sample set or paste questions in code.");
+    };
+
+    // --- Init ---
+    setYear();
+    // Simulate presence
+    state.playersOnline = Math.floor(3 + Math.random()*12);
+    renderStats();
+    renderPublicGames();
+  </script>
+</body>
+</html>
