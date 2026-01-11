@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orange13 YouTube</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .yt-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 28px 20px;
+    }
+    .video-frame {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: none;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+    .playlist {
+      display: grid;
+      gap: 12px;
+    }
+    .playlist button {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #262b45;
+      background: #1b1f33;
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .playlist button:hover {
+      background: var(--accent);
+      color: #0f1220;
+    }
+  </style>
+</head>
+<body>
+  <div class="yt-wrap">
+    <h1>Orange13 YouTube Player</h1>
+    <iframe id="ytFrame" class="video-frame"
+      src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+      allowfullscreen></iframe>
+
+    <h2>Playlist</h2>
+    <div class="playlist">
+      <button onclick="loadVideo('dQw4w9WgXcQ')">Demo Video 1</button>
+      <button onclick="loadVideo('9bZkp7q19f0')">Demo Video 2</button>
+      <button onclick="loadVideo('3JZ_D3ELwOQ')">Demo Video 3</button>
+    </div>
+  </div>
+
+  <script>
+    function loadVideo(id) {
+      const frame = document.getElementById("ytFrame");
+      frame.src = "https://www.youtube.com/embed/" + id;
+    }
+  </script>
+</body>
+</html>
