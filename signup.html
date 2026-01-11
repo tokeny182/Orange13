@@ -88,3 +88,47 @@
   </script>
 </body>
 </html>
+<script>
+  const form = document.getElementById("signupForm");
+  const message = document.getElementById("message");
+
+  function generateUserId() {
+    // length between 1 and 11
+    const length = Math.floor(Math.random() * 11) + 1;
+    let id = "";
+    for (let i = 0; i < length; i++) {
+      id += Math.floor(Math.random() * 10);
+    }
+    // ensure it’s not empty or starting with 0
+    if (id[0] === "0") id = "1" + id.slice(1);
+    return id;
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!username || !email || !password) {
+      message.textContent = "Please fill out all fields.";
+      message.style.color = "var(--danger)";
+      return;
+    }
+
+    // Generate random user ID
+    const userId = generateUserId();
+
+    // Save account info locally
+    const account = { userId, username, email, password };
+    localStorage.setItem("orange13_account", JSON.stringify(account));
+
+    message.textContent = "Account created successfully!";
+    message.style.color = "var(--success)";
+
+    // Redirect to profile page
+    setTimeout(() => {
+      window.location.href = `users/${userId}/profile.html`;
+    }, 1000);
+  });
+</script>
