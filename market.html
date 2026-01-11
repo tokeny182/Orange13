@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orange13 Market</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .market-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 28px 20px;
+    }
+    .currency {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+    .clicker {
+      display: block;
+      margin: 0 auto 24px;
+      padding: 20px 40px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border-radius: 14px;
+      background: var(--accent);
+      color: #0f1220;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    .clicker:active { transform: scale(0.97); }
+    .shop {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .item {
+      background: #1b1f33;
+      border: 1px solid #262b45;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .item h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+    }
+    .item p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .item button {
+      margin-top: auto;
+    }
+    .owned {
+      background: var(--success) !important;
+      color: #fff !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="market-wrap">
+    <h1>Orange13 Market</h1>
+    <div class="currency">Your 13bux: <span id="bux">0</span></div>
+    <button class="clicker" id="clickerBtn">Click to earn +1 13bux</button>
+
+    <h2>Gamepasses (15 13bux each)</h2>
+    <div class="shop">
+      <div class="item">
+        <h3>Double Points</h3>
+        <p>Earn twice the points per correct answer.</p>
+        <button class="btn secondary buyBtn">Buy for 15</button>
+      </div>
+      <div class="item">
+        <h3>Extra Time</h3>
+        <p>Get +10 seconds per question.</p>
+        <button class="btn secondary buyBtn">Buy for 15</button>
+      </div>
+      <div class="item">
+        <h3>Lucky Spin</h3>
+        <p>Chance to earn bonus 13bux after each round.</p>
+        <button class="btn secondary buyBtn">Buy for 15</button>
+      </div>
+      <div class="item">
+        <h3>Leaderboard Highlight</h3>
+        <p>Your name glows on the leaderboard.</p>
+        <button class="btn secondary buyBtn">Buy for 15</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let bux = 0;
+
+    const buxSpan = document.getElementById("bux");
+    const clickerBtn = document.getElementById("clickerBtn");
+    const buyBtns = document.querySelectorAll(".buyBtn");
+
+    clickerBtn.addEventListener("click", () => {
+      bux++;
+      buxSpan.textContent = bux;
+    });
+
+    buyBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (bux >= 15 && !btn.classList.contains("owned")) {
+          bux -= 15;
+          buxSpan.textContent = bux;
+          btn.textContent = "Owned";
+          btn.classList.add("owned");
+          btn.disabled = true;
+        } else if (btn.classList.contains("owned")) {
+          alert("You already own this gamepass!");
+        } else {
+          alert("Not enough 13bux!");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
