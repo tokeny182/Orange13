@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orange13 Logout</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .logout-wrap {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 28px 20px;
+      text-align: center;
+    }
+    .btn {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="logout-wrap">
+    <h1>Logging Out…</h1>
+    <p id="status">Please wait while we clear your session.</p>
+    <button class="btn" id="goLoginBtn" style="display:none;">Go to Login</button>
+  </div>
+
+  <script>
+    // Clear account info
+    localStorage.removeItem("orange13_account");
+
+    // Show confirmation
+    const status = document.getElementById("status");
+    const goLoginBtn = document.getElementById("goLoginBtn");
+
+    status.textContent = "You have been logged out successfully.";
+    goLoginBtn.style.display = "inline-block";
+
+    goLoginBtn.addEventListener("click", () => {
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>
