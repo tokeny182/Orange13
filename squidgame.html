@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orange13 Squid Game</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .game-wrap {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 28px 20px;
+      text-align: center;
+    }
+    .status {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 20px 0;
+    }
+    .arena {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .tile {
+      width: 100px;
+      height: 100px;
+      border-radius: 12px;
+      background: #1b1f33;
+      border: 2px solid #262b45;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    .tile:hover { transform: scale(1.05); }
+    .safe { background: #2ecc71 !important; color: #fff; }
+    .dead { background: #ff4d4f !important; color: #fff; }
+    .btn {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-wrap">
+    <h1>Orange13 Squid Game</h1>
+    <p>Choose the correct tiles to cross safely. One wrong step and you’re out!</p>
+    <div class="status" id="status">Game started — pick a tile.</div>
+    <div class="arena" id="arena"></div>
+    <button class="btn" id="restartBtn" style="display:none;">Restart</button>
+  </div>
+
+  <script>
+    const arena = document.getElementById("arena");
+    const status = document.getElementById("status");
+    const restartBtn = document.getElementById("restartBtn");
+
+    let path = [];
+    let step = 0;
+    let gameOver = false;
+
+    function generatePath() {
+      // Random safe tile sequence (left/right choices)
+      path = [];
+      for (let i = 0; i < 5; i++) {
+        path.push(Math.random() < 0.5 ? 0 : 1); // 0 = left, 1 = right
+      }
+    }
+
+    function renderArena() {
+      arena.innerHTML = "";
+      for (let i = 0; i < 2; i++) {
+        const tile = document.createElement("div");
+        tile.className = "tile";
+        tile.textContent = i === 0 ? "Left" : "Right";
+        tile.onclick = () => chooseTile(i);
+        arena.appendChild(tile);
+      }
+    }
+
+    function chooseTile(choice) {
+      if (gameOver) return;
+      const tiles = document.querySelectorAll(".tile");
+      if (choice === path[step]) {
+        tiles[choice].classList.add("safe");
+        status.textContent = "Safe! Move to step " + (step + 2);
+        step++;
+        if (step >= path.length) {
+          status.textContent = "🎉 You crossed safely! You win!";
+          gameOver = true;
+          restartBtn.style.display = "inline-block";
+        }
+      } else {
+        tiles[choice].classList.add("dead");
+        status.textContent = "💀 Wrong tile! Game over.";
+        gameOver = true;
+        restartBtn.style.display = "inline-block";
+      }
+    }
+
+    function restartGame() {
+      step = 0;
+      gameOver = false;
+      generatePath();
+      renderArena();
+      status.textContent = "Game restarted — pick a tile.";
+      restartBtn.style.display = "none";
+    }
+
+    restartBtn.onclick = restartGame;
+
+    // Init
+    generatePath();
+    renderArena();
+  </script>
+</body>
+</html>
