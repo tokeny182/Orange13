@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Profile</title>
+  <link rel="stylesheet" href="../../style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <h1>Your Profile</h1>
+    <p><strong>User ID:</strong> <span id="uid"></span></p>
+    <p><strong>Username:</strong> <span id="uname"></span></p>
+    <p><strong>Email:</strong> <span id="uemail"></span></p>
+  </div>
+
+  <script>
+    const accountJSON = localStorage.getItem("orange13_account");
+    if (accountJSON) {
+      const account = JSON.parse(accountJSON);
+      document.getElementById("uid").textContent = account.userId;
+      document.getElementById("uname").textContent = account.username;
+      document.getElementById("uemail").textContent = account.email;
+    }
+  </script>
+</body>
+</html>
