@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orange13 Login</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .login-wrap {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 28px 20px;
+    }
+    form {
+      display: grid;
+      gap: 14px;
+      background: #1b1f33;
+      border: 1px solid #262b45;
+      border-radius: 14px;
+      padding: 20px;
+    }
+    label {
+      font-weight: 600;
+    }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #2a2f4a;
+      background: #121528;
+      color: var(--text);
+    }
+    .btn {
+      width: 100%;
+    }
+    .message {
+      margin-top: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <h1>Login to Orange13</h1>
+    <form id="loginForm">
+      <div>
+        <label for="username">Username</label>
+        <input type="text" id="username" required />
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" required />
+      </div>
+      <button type="submit" class="btn">Login</button>
+    </form>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      const accountJSON = localStorage.getItem("orange13_account");
+      if (!accountJSON) {
+        message.textContent = "No account found. Please sign up first.";
+        message.style.color = "var(--danger)";
+        return;
+      }
+
+      const account = JSON.parse(accountJSON);
+      if (account.username === username && account.password === password) {
+        message.textContent = "Login successful! Welcome, " + account.username + ".";
+        message.style.color = "var(--success)";
+        // Example: redirect to index.html
+        // window.location.href = "index.html";
+      } else {
+        message.textContent = "Invalid username or password.";
+        message.style.color = "var(--danger)";
+      }
+    });
+  </script>
+</body>
+</html>
