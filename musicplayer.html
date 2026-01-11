@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orange13 Music Player</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .player-wrap {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 28px 20px;
+      text-align: center;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .btn {
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--accent);
+      color: #0f1220;
+      border: none;
+    }
+    .btn:disabled {
+      background: #555;
+      color: #aaa;
+      cursor: not-allowed;
+    }
+    .track-info {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+    input[type="range"] {
+      width: 100%;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="player-wrap">
+    <h1>Orange13 Music Player</h1>
+    <audio id="audio" preload="metadata"></audio>
+    <div class="track-info" id="trackInfo">No track loaded</div>
+
+    <div class="controls">
+      <button class="btn" id="prevBtn">⏮ Prev</button>
+      <button class="btn" id="playBtn">▶ Play</button>
+      <button class="btn" id="nextBtn">⏭ Next</button>
+    </div>
+
+    <label for="volume">Volume</label>
+    <input type="range" id="volume" min="0" max="1" step="0.05" value="1" />
+  </div>
+
+  <script>
+    const audio = document.getElementById("audio");
+    const playBtn = document.getElementById("playBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const trackInfo = document.getElementById("trackInfo");
+    const volumeSlider = document.getElementById("volume");
+
+    // Playlist with your two Kidz Bop songs
+    const playlist = [
+      { title: "Kidz Bop - Spooky Scary Skeletons", src: "music/spooky_scary_skeletons.mp3" },
+      { title: "Kidz Bop - Ghostbusters", src: "music/ghostbusters.mp3" }
+    ];
+
+    let currentIndex = 0;
+    let isPlaying = false;
+
+    function loadTrack(index) {
+      const track = playlist[index];
+      audio.src = track.src;
+      trackInfo.textContent = track.title;
+    }
+
+    function playPause() {
+      if (!isPlaying) {
+        audio.play();
+        isPlaying = true;
+        playBtn.textContent = "⏸ Pause";
+      } else {
+        audio.pause();
+        isPlaying = false;
+        playBtn.textContent = "▶ Play";
+      }
+    }
+
+    function nextTrack() {
+      currentIndex = (currentIndex + 1) % playlist.length;
+      loadTrack(currentIndex);
+      if (isPlaying) audio.play();
+    }
+
+    function prevTrack() {
+      currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+      loadTrack(currentIndex);
+      if (isPlaying) audio.play();
+    }
+
+    playBtn.addEventListener("click", playPause);
+    nextBtn.addEventListener("click", nextTrack);
+    prevBtn.addEventListener("click", prevTrack);
+
+    volumeSlider.addEventListener("input", () => {
+      audio.volume = volumeSlider.value;
+    });
+
+    // Auto load first track
+    loadTrack(currentIndex);
+  </script>
+</body>
+</html>
